@@ -1,7 +1,25 @@
 {
   "name": "qaflow-web",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QA-Flow/qaflow-web.git"
+  },
+  "keywords": [
+    "qaflow",
+    "web"
+  ],
+  "description": "QA Flow Web",
+  "bugs": {
+    "url": "https://github.com/QA-Flow/qaflow-web/issues"
+  },
+  "homepage": "https://github.com/QA-Flow/qaflow-web/issues",
+  "author": "Doruk Ozgen",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
