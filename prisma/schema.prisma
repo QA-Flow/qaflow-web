@@ -25,6 +25,7 @@ model User {
 
   authenticators Authenticator[]
   apiTokens     ApiToken[]
+  testReports   TestReport[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -72,7 +73,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
  
-// Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @id @map("_id")
   userId               String  @db.ObjectId
@@ -98,4 +98,36 @@ model ApiToken {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+model TestReport {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  
+  name         String   
+  description  String?  
+  status       String   
+  
+  startTime    DateTime 
+  endTime      DateTime 
+  duration     Int?     
+  
+  authorName   String?  
+  authorEmail  String?  
+  
+  environment  String   
+  steps        String   
+  screenshots  String?  
+  
+  rawData      String   
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([name])
+  @@index([createdAt])
 }
