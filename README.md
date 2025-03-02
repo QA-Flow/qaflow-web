@@ -1,4 +1,4 @@
-# QA Flow - AI-Powered Quality Assurance & Test Reporting System
+# QA Flow - AI-Powered Quality Assurance & Test Reporting Platform
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -18,6 +18,22 @@
 ✅ Web & Mobile report visualization  
 ✅ Customizable reporting module for developers  
 ✅ Intuitive dashboard with detailed logs  
+
+## 📚 Documentation
+
+This Next.js project uses **FumaDocs** for documentation management. The documentation is accessible at the `/docs` URL path, and all documentation content is stored in the `content/docs` directory of the project.
+
+## 🎯 Purpose of QA Flow
+
+The primary goal of **QA Flow** is to streamline the quality assurance process by providing a comprehensive platform for test reporting and analysis. With QA Flow:
+
+- Test developers can integrate our reporting module into their test frameworks
+- Test results and reports are automatically collected and processed
+- Teams can view detailed test reports through an intuitive dashboard interface
+- AI-powered analysis helps identify patterns and suggest fixes for recurring issues
+- QA teams can track test coverage and quality metrics over time
+
+This approach ensures faster issue detection, more efficient debugging, and ultimately higher quality software releases.
 
 ## 📦 Installation & Setup
 
