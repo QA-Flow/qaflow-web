@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import 'fumadocs-ui/css/ocean.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@source '../../node_modules/fumadocs-ui/dist/**/*.js';
 
 :root {
   --background: #ffffff;
@@ -12,10 +14,4 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
