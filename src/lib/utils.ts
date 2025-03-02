@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { nanoid } from "nanoid";
 
 export async function generateUniqueToken() {
   let token: string = '';
@@ -21,16 +23,16 @@ export async function generateUniqueToken() {
 }
 
 export async function generateApiToken(userId: string) {
-  const token = await generateUniqueToken();
+  const token = `tk_${nanoid(32)}`;
 
-  const apiToken = await prisma.apiToken.create({
+  await prisma.apiToken.create({
     data: {
-      token: token!,
       userId,
+      token,
     },
   });
 
-  return apiToken;
+  return token;
 }
 
 export async function getUserTokens(userId: string) {
@@ -48,31 +50,63 @@ export async function deleteApiToken(tokenId: string) {
   });
 }
 
-export async function verifyApiToken(token: string) {
-  const apiToken = await prisma.apiToken.findUnique({
-    where: { token },
-    include: { user: true },
-  });
+export function toJSON<T>(
+  obj: T & { toJSON?: () => any }
+): Partial<T & { _id: string }> {
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (e) {
+    return {};
+  }
+}
 
-  return apiToken;
-} 
+export async function verifyApiToken(token: string) {
+  const cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+  
+  try {
+    const apiToken = await prisma.apiToken.findUnique({
+      where: { token: cleanToken },
+      include: { user: true },
+    });
+
+    if (!apiToken) {
+      return null;
+    }
+
+    return {
+      userId: apiToken.userId,
+      user: apiToken.user,
+    };
+  } catch (error) {
+    return null;
+  }
+}
 
 export async function updateApiToken(userId: string) {
-  const existingToken = await prisma.apiToken.findFirst({
-    where: { userId },
-  });
+  const token = `tk_${nanoid(32)}`;
 
-  if (!existingToken) {
-    return generateApiToken(userId);
-  } else {
-    const token = await generateUniqueToken();
-
-    await prisma.apiToken.update({
-      where: { id: existingToken.id },
-      data: {
-        token
-      },
+  try {
+    const existingToken = await prisma.apiToken.findFirst({
+      where: { userId },
     });
+
+    if (existingToken) {
+      await prisma.apiToken.update({
+        where: { id: existingToken.id },
+        data: { token },
+      });
+    } else {
+      await prisma.apiToken.create({
+        data: {
+          userId,
+          token,
+        },
+      });
+    }
+
+    return token;
+  } catch (error) {
+    throw error;
   }
 }
 
