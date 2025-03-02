@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 import { generateApiToken } from "@/lib/utils";
+import { DEFAULT_LOGIN_REDIRECT } from "./routes";
 
 export const signInAction = async (signInValues: SignInValues) => {
   try {
@@ -16,7 +17,6 @@ export const signInAction = async (signInValues: SignInValues) => {
       redirect: false
     });
   } catch (error) {
-    console.log("ERROR OCCURED SIGNUP ACTION", error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -27,7 +27,7 @@ export const signInAction = async (signInValues: SignInValues) => {
     }
     throw error;
   }
-  redirect("/dashboard");
+  redirect(DEFAULT_LOGIN_REDIRECT);
 };
 
 export const signUpAction = async (signUpValues: SignUpValues) => {
@@ -36,16 +36,17 @@ export const signUpAction = async (signUpValues: SignUpValues) => {
   try {
     const user = await prisma.user.create({
       data: {
-        ...data,
+        username: data.username,
+        email: data.email,
         password: hashSync(data.password, 10),
       },
     });
 
-    generateApiToken(user.id);
+    await generateApiToken(user.id);
+    
+    return { success: true };
   } catch (error) {
-    console.log("ERROR OCCURED SIGNUP ACTION", error);
     if (error instanceof PrismaClientKnownRequestError) {
-      console.log(error.code);
       switch (error.code) {
         case "P2002":
           return { error: "Email already exists" };
@@ -53,7 +54,6 @@ export const signUpAction = async (signUpValues: SignUpValues) => {
           return { error: "An error occurred: " + error.message };
       }
     }
-    return { error: "An error occurred: " + error };
+    return { error: "An error occurred: " + (error instanceof Error ? error.message : String(error)) };
   }
-  redirect("/login");
 };
