@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { updateApiToken } from "@/lib/utils";
 import { getUserIdFromSession } from "@/lib/auth-utils";
 
+export const config = {
+  runtime: "edge",
+};
+
 export async function POST(req: NextRequest) {
   try {
     const { error, userId } = await getUserIdFromSession(req);

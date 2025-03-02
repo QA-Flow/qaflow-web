@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserIdFromSession } from "@/lib/auth-utils";
 
+export const config = {
+  runtime: "edge",
+};
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const id = (await params).id
     const { error, userId } = await getUserIdFromSession(req);
     
     if (error) {
@@ -15,7 +20,7 @@ export async function GET(
 
     const report = await prisma.testReport.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId: userId!
       }
     });
