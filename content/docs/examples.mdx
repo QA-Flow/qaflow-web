@@ -1,0 +1,487 @@
+---
+title: "Examples"
+description: "Integration examples with various testing frameworks"
+icon: "BookOpen"
+---
+
+# Examples
+
+This page provides examples of integrating QAFlow Reporter with various testing frameworks. These examples demonstrate how to set up reporting for your tests and how to structure your code for optimal results.
+
+## Playwright Integration
+
+### Basic Playwright Example
+
+```javascript
+import { test } from '@playwright/test';
+import reporter from '@qaflow/report';
+
+test('Product search test', async ({ page, browser }) => {
+  // Initialize the test
+  reporter.createTest(
+    'Product Search Test',
+    'Tests the search functionality on an e-commerce site',
+    { author: 'QA Tester', email: 'tester@example.com' },
+    { 
+      name: 'Playwright Test', 
+      browser: browser.browserType().name(),
+      version: browser.version(),
+      os: process.platform
+    }
+  );
+
+  try {
+    // Test steps
+    await reporter.step('Navigate to homepage', async () => {
+      await page.goto('https://example.com');
+      return true;
+    });
+
+    await reporter.step('Click search box', async () => {
+      await page.click('.search-box');
+      return true;
+    });
+
+    await reporter.step('Enter search query', async () => {
+      await page.fill('.search-input', 'test product');
+      await page.press('.search-input', 'Enter');
+      return true;
+    });
+
+    // Take a screenshot of the search results
+    const screenshot = await page.screenshot({ encoding: 'base64' });
+    
+    await reporter.step('Verify search results', async () => {
+      const resultCount = await page.locator('.product-item').count();
+      return resultCount > 0;
+    }, { screenshot });
+
+    // End the test
+    const result = await reporter.end();
+    console.log('Test result:', result);
+  } catch (error) {
+    // End the test in case of error
+    console.error('Test error:', error);
+    await reporter.end();
+    throw error;
+  }
+});
+```
+
+### Playwright with Test Fixtures
+
+You can also create custom fixtures to make QAFlow Reporter available to all your tests:
+
+```javascript
+// fixtures.js
+import { test as base } from '@playwright/test';
+import reporter from '@qaflow/report';
+
+// Define a custom fixture
+export const test = base.extend({
+  qaReporter: async ({ browser, page }, use) => {
+    // Create a test at the start of each test
+    reporter.createTest(
+      test.info().title,
+      test.info().annotations.find(a => a.type === 'description')?.description || '',
+      { author: 'QA Tester', email: 'tester@example.com' },
+      { 
+        name: 'Playwright Test', 
+        browser: browser.browserType().name(),
+        version: browser.version(),
+        os: process.platform
+      }
+    );
+    
+    // Provide the reporter to the test
+    await use(reporter);
+    
+    // End the test after it's complete
+    await reporter.end();
+  }
+});
+
+export { expect } from '@playwright/test';
+```
+
+Then in your test files:
+
+```javascript
+import { test, expect } from './fixtures';
+
+test('User login test', async ({ page, qaReporter }) => {
+  await qaReporter.step('Navigate to login page', async () => {
+    await page.goto('https://example.com/login');
+    return true;
+  });
+  
+  await qaReporter.step('Enter credentials', async () => {
+    await page.fill('#username', 'testuser');
+    await page.fill('#password', 'password123');
+    return true;
+  });
+  
+  await qaReporter.step('Click login button', async () => {
+    await page.click('#login-button');
+    return true;
+  });
+  
+  await qaReporter.step('Verify successful login', async () => {
+    await page.waitForURL('**/dashboard');
+    return page.url().includes('/dashboard');
+  });
+});
+```
+
+## Jest Integration
+
+### Basic Jest Example
+
+```javascript
+import reporter from '@qaflow/report';
+
+describe('User functions', () => {
+  beforeAll(() => {
+    reporter.createTest(
+      'User Registration Test',
+      'Tests the user registration functionality',
+      { author: 'QA Tester', email: 'tester@example.com' },
+      { name: 'Jest Test Environment', version: process.version, os: process.platform }
+    );
+  });
+
+  afterAll(async () => {
+    const results = await reporter.end();
+    console.log('Test result:', results);
+  });
+
+  test('should register a new user', async () => {
+    await reporter.step('Fill out registration form', () => {
+      // Registration form logic
+      return true;
+    });
+
+    await reporter.step('Submit registration form', () => {
+      // Form submission logic
+      return true;
+    });
+
+    await reporter.step('Verify confirmation email', () => {
+      // Email verification logic
+      return true;
+    });
+  });
+});
+```
+
+### Jest with Custom Reporter
+
+You can also create a custom Jest reporter to automatically handle QAFlow reporting:
+
+```javascript
+// qaflow-jest-reporter.js
+import reporter from '@qaflow/report';
+
+class QAFlowJestReporter {
+  constructor(globalConfig, options) {
+    this.globalConfig = globalConfig;
+    this.options = options;
+    this.currentTest = null;
+  }
+
+  onRunStart() {
+    // Initialize QAFlow if needed
+    if (this.options.apiKey) {
+      reporter.initialize(this.options.apiKey);
+    }
+  }
+
+  onTestStart(test) {
+    this.currentTest = test;
+    
+    reporter.createTest(
+      test.title,
+      test.fullName,
+      { author: this.options.author || 'Jest Tester', email: this.options.email || 'tester@example.com' },
+      { name: 'Jest', version: process.version, os: process.platform }
+    );
+  }
+
+  async onTestResult(test, testResult) {
+    if (testResult.status === 'failed') {
+      // Record the failure
+      await reporter.step('Test execution', false, { 
+        description: testResult.failureMessage
+      });
+    } else {
+      // Record the success
+      await reporter.step('Test execution', true);
+    }
+    
+    await reporter.end();
+  }
+
+  onRunComplete() {
+    // Cleanup if needed
+  }
+}
+
+module.exports = QAFlowJestReporter;
+```
+
+Configure in your Jest config:
+
+```javascript
+// jest.config.js
+module.exports = {
+  reporters: [
+    'default',
+    ['./qaflow-jest-reporter.js', {
+      apiKey: process.env.QAFLOW_API_KEY,
+      author: 'Jest Test Runner',
+      email: 'test@example.com'
+    }]
+  ]
+};
+```
+
+## Cypress Integration
+
+### Basic Cypress Example
+
+```javascript
+// cypress/support/e2e.js
+import reporter from '@qaflow/report';
+
+// Initialize QAFlow Reporter
+beforeEach(() => {
+  const testName = Cypress.currentTest.title;
+  const testDescription = `${Cypress.currentTest.titlePath.join(' > ')}`;
+  
+  reporter.createTest(
+    testName,
+    testDescription,
+    { author: 'Cypress Tester', email: 'cypress@example.com' },
+    { 
+      name: 'Cypress', 
+      browser: Cypress.browser.name,
+      version: Cypress.browser.version,
+      os: Cypress.platform 
+    }
+  );
+});
+
+// End test after completion
+afterEach(() => {
+  reporter.end();
+});
+
+// Define a custom Cypress command for steps
+Cypress.Commands.add('qaStep', (name, fn, options) => {
+  return cy.wrap(null).then(async () => {
+    return reporter.step(name, fn, options);
+  });
+});
+```
+
+In your test file:
+
+```javascript
+// cypress/e2e/login.cy.js
+describe('Login functionality', () => {
+  it('Should log in successfully with valid credentials', () => {
+    cy.visit('/login');
+    
+    cy.qaStep('Navigate to login page', () => {
+      return true;
+    });
+    
+    cy.qaStep('Enter username', () => {
+      cy.get('#username').type('testuser');
+      return true;
+    });
+    
+    cy.qaStep('Enter password', () => {
+      cy.get('#password').type('password123');
+      return true;
+    });
+    
+    cy.qaStep('Click login button', () => {
+      cy.get('#login-button').click();
+      return true;
+    });
+    
+    cy.qaStep('Verify successful login', () => {
+      cy.url().should('include', '/dashboard');
+      return true;
+    });
+  });
+});
+```
+
+## Standalone Usage Example
+
+For standalone scripts or custom test runners:
+
+```javascript
+import reporter from '@qaflow/report';
+
+async function runMyCustomTest() {
+  // Initialize reporter
+  reporter.initialize('your-api-key-here');
+  
+  // Create a test
+  reporter.createTest(
+    'API Integration Test',
+    'Tests the integration with our payment gateway',
+    { author: 'API Tester', email: 'api@example.com' },
+    { name: 'Node.js Script', version: process.version, os: process.platform }
+  );
+  
+  try {
+    // Test steps
+    await reporter.step('Initialize API client', () => {
+      console.log('Initializing API client...');
+      return true;
+    });
+    
+    await reporter.step('Generate test order', async () => {
+      console.log('Generating test order...');
+      const order = { id: 12345, amount: 99.99 };
+      return order;
+    });
+    
+    await reporter.step('Send payment request', async () => {
+      console.log('Sending payment request...');
+      // Simulate API request
+      return new Promise(resolve => setTimeout(() => resolve(true), 500));
+    });
+    
+    await reporter.step('Verify payment success', async () => {
+      console.log('Verifying payment success...');
+      return true;
+    });
+    
+    // End the test
+    const results = await reporter.end();
+    console.log('Test completed!');
+    console.log(results);
+  } catch (error) {
+    console.error('Test failed:', error);
+    // Ensure test is ended even on error
+    await reporter.end();
+  }
+}
+
+runMyCustomTest().catch(console.error);
+```
+
+## Advanced Examples
+
+### Parallel Tests
+
+When running tests in parallel, ensure each test has a unique ID:
+
+```javascript
+import reporter from '@qaflow/report';
+
+// For parallel tests, create a custom instance
+const myReporter = new QAFlowReport({
+  apiKey: 'your-api-key-here'
+});
+
+async function runTest(testId) {
+  const test = myReporter.createTest(
+    `Parallel Test ${testId}`,
+    `Test running in parallel with ID ${testId}`,
+    { author: 'Parallel Tester', email: 'parallel@example.com' },
+    { name: 'Node.js', version: process.version, os: process.platform }
+  );
+  
+  // Add steps
+  await test.step(`Step 1 for test ${testId}`, async () => {
+    await new Promise(resolve => setTimeout(resolve, 100 * testId));
+    return true;
+  });
+  
+  await test.step(`Step 2 for test ${testId}`, async () => {
+    await new Promise(resolve => setTimeout(resolve, 50 * testId));
+    return true;
+  });
+  
+  // End this specific test
+  return test.end();
+}
+
+// Run 5 tests in parallel
+Promise.all([1, 2, 3, 4, 5].map(id => runTest(id)))
+  .then(results => {
+    console.log('All tests completed!');
+    results.forEach(result => {
+      console.log(`${result.name}: ${result.summary.passed}/${result.summary.total} passed`);
+    });
+  })
+  .catch(console.error);
+```
+
+### Nested Steps
+
+For more complex tests, you can create nested steps by calling `reporter.step` inside another step:
+
+```javascript
+import reporter from '@qaflow/report';
+
+async function runComplexTest() {
+  reporter.createTest(
+    'Complex Workflow Test',
+    'Tests a complex multi-step workflow',
+    { author: 'QA Tester', email: 'tester@example.com' },
+    { name: 'Node.js', version: process.version, os: process.platform }
+  );
+  
+  await reporter.step('User registration flow', async () => {
+    const user = { name: 'Test User', email: 'user@example.com' };
+    
+    // Nested steps
+    await reporter.step('Fill registration form', () => {
+      console.log('Filling form...');
+      return true;
+    });
+    
+    await reporter.step('Submit registration', () => {
+      console.log('Submitting registration...');
+      return true;
+    });
+    
+    await reporter.step('Verify email', () => {
+      console.log('Verifying email...');
+      return true;
+    });
+    
+    return user; // Return value from parent step
+  });
+  
+  await reporter.step('Product ordering flow', async () => {
+    // More nested steps...
+    await reporter.step('Search for product', () => {
+      return true;
+    });
+    
+    await reporter.step('Add to cart', () => {
+      return true;
+    });
+    
+    await reporter.step('Checkout', () => {
+      return true;
+    });
+  });
+  
+  const results = await reporter.end();
+  console.log('Complex test completed!');
+  console.log(results);
+}
+
+runComplexTest().catch(console.error);
+```
+
+These examples should help you get started with QAFlow Reporter in your testing workflows. For more detailed API documentation, see the [API Reference](/docs/api-reference) section. 

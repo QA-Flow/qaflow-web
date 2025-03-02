@@ -1,0 +1,15 @@
+{
+  "title": "Documentation",
+  "description": "Documentation for the project",
+  "pages": [
+    "---Introduction---",
+    "index",
+    "what-is-qaflow-reporter",
+    "---Setup---",
+    "installation",
+    "configuration",
+    "---Usage---",
+    "basic-usage",
+    "examples"
+  ]
+}

@@ -1,0 +1,135 @@
+---
+title: "Installation"
+description: "Install and configure QAFlow Reporter in your project"
+icon: "BookOpen"
+---
+
+# Installation
+
+This page provides detailed instructions for installing and configuring QAFlow Reporter in your project.
+
+## Requirements
+
+QAFlow Reporter requires:
+
+- Node.js 14 or higher
+- A QAFlow account with an API key
+
+## Installing the Package
+
+Install QAFlow Reporter using your preferred package manager:
+
+```bash
+# Using npm
+npm install @qaflow/report
+
+# Using Yarn
+yarn add @qaflow/report
+
+# Using pnpm
+pnpm add @qaflow/report
+```
+
+This will add QAFlow Reporter to your project dependencies.
+
+## Configuration Options
+
+### Using the CLI
+
+The easiest way to configure QAFlow Reporter is by using the CLI to generate a configuration file:
+
+```bash
+npx @qaflow/report init
+```
+
+This will:
+1. Prompt you for your QAFlow API key
+2. Create a `reporter.config.js` file in your project root
+3. Set up the initial configuration
+
+If you already have your API key and want to bypass the interactive prompt:
+
+```bash
+npx @qaflow/report init --key=your-api-key-here
+```
+
+### Manual Configuration
+
+You can also create the configuration file manually:
+
+1. Create a `reporter.config.js` file in your project root
+2. Add the following content:
+
+```javascript
+module.exports = {
+  apiKey: 'your-api-key-here'
+};
+```
+
+### Programmatic Configuration
+
+If you prefer, you can configure QAFlow Reporter programmatically in your code:
+
+```javascript
+import reporter from "@qaflow/report";
+
+reporter.initialize("your-api-key-here");
+```
+
+## Configuration Options
+
+QAFlow Reporter supports the following configuration options:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | string | required | Your QAFlow API key |
+| `pingInterval` | number | `null` | Interval in milliseconds for sending ping requests |
+| `autoScreenshot` | boolean | `false` | Whether to automatically capture screenshots |
+
+## Verifying Installation
+
+To verify your installation and configuration:
+
+1. Create a simple test file with the following content:
+
+```javascript
+import reporter from "@qaflow/report";
+
+// Create a simple test
+reporter.createTest(
+  "Installation Test",
+  "Verifying QAFlow Reporter installation",
+  { author: "Test User", email: "user@example.com" },
+  { name: "Node.js", version: process.version, os: process.platform }
+);
+
+// Add a test step
+await reporter.step("Verify connection", async () => {
+  // This step should pass
+  return true;
+});
+
+// End the test
+const results = await reporter.end();
+console.log("Test completed successfully!");
+console.log(results);
+```
+
+2. Run the test file:
+
+```bash
+node -r esm your-test-file.js
+```
+
+If everything is set up correctly, you should see a successful test result in your console and in your QAFlow dashboard.
+
+## Troubleshooting
+
+If you encounter issues during installation:
+
+- Check that your API key is correct
+- Ensure you have an active internet connection
+- Verify that your Node.js version is 14 or higher
+- Check for any firewall or network restrictions
+
+For additional support, contact the QAFlow support team with the error details. 

@@ -1,0 +1,231 @@
+---
+title: "Basic Usage"
+description: "Learn the core functionality of QAFlow Reporter"
+icon: "BookOpen"
+---
+
+# Basic Usage
+
+This guide covers the core functionality of QAFlow Reporter and shows you how to use it in your tests.
+
+## Importing the Reporter
+
+QAFlow Reporter provides a singleton instance that you can import directly:
+
+```javascript
+import reporter from "@qaflow/report";
+```
+
+## Creating a Test
+
+To start reporting, you first need to create a test:
+
+```javascript
+reporter.createTest(
+  "Test Name",           // Name of the test
+  "Test description",    // Description of what the test does
+  {                      // Tester information
+    author: "QA Tester", 
+    email: "tester@example.com"
+  },
+  {                      // Environment information
+    name: "Chrome",      // Environment name
+    version: "118.0.0",  // Environment version
+    os: "macOS",         // Operating system
+    browser: "Chrome"    // Browser (if applicable)
+  }
+);
+```
+
+The `createTest` method makes this the current active test. All subsequent steps will be associated with this test until you call `end()` or create another test.
+
+## Adding Test Steps
+
+After creating a test, you can add steps to it:
+
+```javascript
+await reporter.step("Step name", async () => {
+  // Your step implementation goes here
+  // For example: await page.click('.button');
+  
+  return true; // or any value
+});
+```
+
+### Step Parameters
+
+The `step` method accepts the following parameters:
+
+- `name`: String name of the step
+- `fn`: Function to execute or a boolean value
+- `options`: (Optional) Object with additional options:
+  - `description`: Additional details about the step
+  - `screenshot`: Base64-encoded screenshot data
+  - `skipped`: Whether to mark the step as skipped
+
+### Different Ways to Create Steps
+
+#### Function Execution
+
+```javascript
+await reporter.step("Click login button", async () => {
+  await page.click('.login-button');
+  return true;
+});
+```
+
+#### Direct Boolean Result
+
+```javascript
+await reporter.step("Verify login successful", true);
+// or
+await reporter.step("Verify login failed", false);
+```
+
+#### With Screenshot
+
+```javascript
+const screenshot = await page.screenshot({ encoding: 'base64' });
+await reporter.step("Verify dashboard page", () => {
+  return page.url().includes('/dashboard');
+}, { screenshot });
+```
+
+#### Skipped Step
+
+```javascript
+await reporter.step("Optional verification", () => {
+  // This won't be executed
+}, { skipped: true });
+```
+
+## Step Results
+
+Each step returns an object with:
+
+- `step`: The step information including status
+- `result`: The value returned by the step function (if any)
+
+```javascript
+const { step, result } = await reporter.step("Get user data", async () => {
+  const response = await api.getUser(123);
+  return response.data;
+});
+
+console.log(step.status); // PASSED, FAILED, or SKIPPED
+console.log(result);      // The response.data from the function
+```
+
+## Ending a Test
+
+When you're done adding steps, end the test to finalize the report:
+
+```javascript
+const results = await reporter.end();
+```
+
+The `end` method:
+1. Calculates the final test status
+2. Sends all test data to the QAFlow API
+3. Returns a summary of the test results
+
+The returned `results` object contains:
+- `name`: Test name
+- `summary`: Summary of test results (total, passed, failed, skipped steps)
+- `duration`: Total test duration in milliseconds
+
+```javascript
+console.log(`Test: ${results.name}`);
+console.log(`Duration: ${results.duration}ms`);
+console.log(`Total steps: ${results.summary.total}`);
+console.log(`Passed: ${results.summary.passed}`);
+console.log(`Failed: ${results.summary.failed}`);
+console.log(`Skipped: ${results.summary.skipped}`);
+```
+
+## Complete Example
+
+Here's a complete example showing the entire workflow:
+
+```javascript
+import reporter from "@qaflow/report";
+
+async function runTest() {
+  // Create a test
+  reporter.createTest(
+    "Login Test",
+    "Verify user can log in successfully",
+    { author: "QA Tester", email: "tester@example.com" },
+    { name: "Chrome", version: "118.0.0", os: "macOS", browser: "Chrome" }
+  );
+
+  // Add test steps
+  await reporter.step("Navigate to login page", () => {
+    console.log("Navigating to login page...");
+    return true;
+  });
+
+  await reporter.step("Enter username", () => {
+    console.log("Entering username...");
+    return true;
+  });
+
+  await reporter.step("Enter password", () => {
+    console.log("Entering password...");
+    return true;
+  });
+
+  await reporter.step("Click login button", () => {
+    console.log("Clicking login button...");
+    return true;
+  });
+
+  await reporter.step("Verify redirect to dashboard", () => {
+    console.log("Verifying redirect...");
+    return true;
+  });
+
+  // End the test and get results
+  const results = await reporter.end();
+  console.log("Test completed!");
+  console.log(results);
+}
+
+// Run the test
+runTest().catch(console.error);
+```
+
+## Error Handling
+
+QAFlow Reporter automatically handles errors in your steps:
+
+```javascript
+await reporter.step("Step that will fail", () => {
+  throw new Error("Something went wrong");
+});
+```
+
+When an error occurs:
+1. The step is marked as FAILED
+2. The error message and stack trace are captured
+3. Execution continues to the next step
+
+It's good practice to wrap your test in a try/catch block:
+
+```javascript
+try {
+  // Create test and add steps
+  // ...
+  await reporter.end();
+} catch (error) {
+  console.error("Test failed:", error);
+  // Ensure the test is ended even if there's an error
+  await reporter.end();
+}
+```
+
+## Next Steps
+
+Now that you understand the basics, check out:
+- [Examples](/docs/examples) for integration with specific frameworks
+- [API Reference](/docs/api-reference) for detailed API documentation 

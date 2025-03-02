@@ -1,0 +1,98 @@
+---
+title: "Quick Start"
+description: "Get started with QAFlow Reporter in minutes"
+icon: "BookOpen"
+---
+
+# Quick Start
+
+Get up and running with QAFlow Reporter in just a few minutes. This guide will walk you through the essential steps to integrate QAFlow Reporter into your testing workflow.
+
+## 1. Install the Package
+
+First, install the QAFlow Reporter package using your preferred package manager:
+
+```bash
+npm install @qaflow/report
+# or
+yarn add @qaflow/report
+# or
+pnpm add @qaflow/report
+```
+
+## 2. Create a Configuration File
+
+The simplest way to set up QAFlow Reporter is to create a configuration file with your API key:
+
+```bash
+npx @qaflow/report init
+```
+
+This interactive command will ask for your API key and create a `reporter.config.js` file. Alternatively, you can specify your API key directly:
+
+```bash
+npx @qaflow/report init --key=your-api-key-here
+```
+
+## 3. Basic Usage Example
+
+Here's a simple example to get you started:
+
+```javascript
+// Import the reporter
+import reporter from "@qaflow/report";
+
+// Create a test
+reporter.createTest(
+  "Login Test",
+  "Testing the login functionality of our application",
+  { author: "QA Tester", email: "tester@example.com" },
+  { name: "Chrome", version: "118.0.0", os: "macOS", browser: "Chrome" }
+);
+
+// Add test steps
+await reporter.step("Navigate to login page", () => {
+  // Step implementation
+  return true; // Step passes
+});
+
+await reporter.step("Enter username", () => {
+  // Username entry logic
+  return true;
+});
+
+await reporter.step("Enter password", () => {
+  // Password entry logic
+  return true;
+});
+
+await reporter.step("Click login button", () => {
+  // Login button click logic
+  return true;
+});
+
+// End the test and get results
+const results = await reporter.end();
+console.log(`Total steps: ${results.summary.total}`);
+console.log(`Passed steps: ${results.summary.passed}`);
+console.log(`Failed steps: ${results.summary.failed}`);
+console.log(`Skipped steps: ${results.summary.skipped}`);
+```
+
+## 4. View Your Results
+
+After running your tests, the results will be available in your QAFlow dashboard. You can view detailed information about each test, including:
+
+- Test status (passed, failed, skipped)
+- Individual step results
+- Error details for failed steps
+- Test duration and timestamps
+- Environment information
+
+## Next Steps
+
+Now that you have QAFlow Reporter set up, check out these resources to learn more:
+
+- [Basic Usage](/docs/basic-usage) - Learn about the core functionality
+- [Installation](/docs/installation) - Detailed installation instructions
+- [Examples](/docs/examples) - See how to integrate with different testing frameworks 
