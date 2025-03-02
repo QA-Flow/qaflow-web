@@ -11,13 +11,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     providers: [
         Credentials({
           async authorize(credentials) {
-            // Validate the fields
             const validatedFields = signInSchema.safeParse(credentials);
             if (!validatedFields.success) {
               return null;
             }
     
-            // Validate that the user exists
             const { email, password } = validatedFields.data;
             const user = await prisma.user.findUnique({
               where: { email },
@@ -26,7 +24,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               return null;
             }
     
-            // Check the password
             const isPasswordMatch = await compare(password, user.password);
             if (!isPasswordMatch) {
               return null;
@@ -48,6 +45,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           });
   
           if (existingUser) {
+            token.username = existingUser.username;
             token.id = existingUser.id;
             token.email = existingUser.email;
           }
@@ -57,6 +55,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
       async session({ session, token }) {
         if (token?.id) {
+          session.user.username = token.username;
           session.user.id = token.id;
           session.user.email = token.email;
         }

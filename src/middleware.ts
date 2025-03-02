@@ -11,25 +11,29 @@ export default auth(async (req) => {
   console.log("TOKEN: ", token);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRotue = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute = publicRoutes.some(route => 
+    nextUrl.pathname === route || nextUrl.pathname.startsWith(`${route}/`)
+  );
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isDashboardRoute = nextUrl.pathname.startsWith("/dashboard");
+  const isApiRoute = nextUrl.pathname.startsWith("/api") && !isApiAuthRoute;
 
-  // if it is an API Next Auth route, we don't want to redirect
   if (isApiAuthRoute) return;
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      // if the user is already logged in and is in sign-in or sign-up page
-      // redirect to the default logged in page (which is dashboard in this case)
       console.log("redirecting to dashboard");
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
-    // if the user is not logged in and is in sign-in or sign-up page, let them be
     return;
   }
 
-  if (!isLoggedIn && !isPublicRotue) {
-    // if the user is not logged in and is not in a public route, redirect to sign-in page
+  if ((isDashboardRoute || isApiRoute) && !isLoggedIn) {
+    const callbackUrl = encodeURIComponent(nextUrl.pathname);
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${callbackUrl}`, nextUrl));
+  }
+
+  if (!isLoggedIn && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
