@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import Sidebar from "./_components/Sidebar";
-import Navbar from "./_components/Navbar";
 
 export default function DashboardLayout({
   children,
@@ -13,7 +12,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -24,29 +23,33 @@ export default function DashboardLayout({
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="loading loading-spinner loading-lg text-primary"></div>
+        <div className="loading loading-spinner loading-lg text-primary">
+          Loading...
+        </div>
       </div>
     );
   }
 
   if (status === "unauthenticated") {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg text-primary">
+          Loading...
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="drawer lg:drawer-open">
-      <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
       
-      <div className="drawer-content flex flex-col min-h-screen bg-gray-50">
-        <Navbar />
-        
-        <main className="flex-1 p-4 lg:p-6 container mx-auto max-w-7xl">
+      <div className="p-4 sm:ml-64">
+        <div className="p-4">
           <Toaster position="top-right" />
           {children}
-        </main>
+        </div>
       </div>
-      
-      <Sidebar />
     </div>
   );
 } 

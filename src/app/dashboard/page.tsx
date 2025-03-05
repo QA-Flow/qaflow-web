@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { FaKey, FaClipboardList, FaChartLine, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaKey, FaClipboardList, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 import DashboardCard from "./_components/DashboardCard";
 import QuickActions from "./_components/QuickActions";
@@ -85,7 +85,7 @@ export default function DashboardPage() {
             Welcome back, {session?.user?.username || "User"}!
           </h1>
           <p className="text-gray-600 mt-1">
-            Here's an overview of your QA testing metrics and activities.
+            Here&apos;s an overview of your QA testing metrics and activities.
           </p>
         </div>
       </div>
@@ -146,37 +146,6 @@ export default function DashboardPage() {
           totalTests={stats.totalTests}
           activities={recentActivities}
         />
-      </div>
-      
-      <div className="card bg-white shadow-md">
-        <div className="card-body">
-          <h2 className="card-title text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            <FaChartLine className="text-cyan-500" />
-            Test Trends
-          </h2>
-          
-          {isLoading ? (
-            <div className="h-64 bg-gray-100 rounded-xl animate-pulse flex items-center justify-center">
-              <p className="text-gray-400">Loading chart data...</p>
-            </div>
-          ) : stats.totalTests > 0 ? (
-            <div className="mockup-code bg-gray-800 text-white">
-              <pre data-prefix="$"><code>Advanced analytics coming soon to QA Flow</code></pre>
-              <pre data-prefix=">" className="text-success"><code>Stay tuned for visualizations and insights</code></pre>
-              <pre data-prefix=">" className="text-error"><code>Failure trend detection</code></pre>
-              <pre data-prefix=">" className="text-warning"><code>Performance benchmarking</code></pre>
-              <pre data-prefix="$"><code>Release planned for next update</code></pre>
-            </div>
-          ) : (
-            <div className="h-64 bg-gray-50 rounded-xl flex flex-col items-center justify-center">
-              <FaChartLine className="text-5xl text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No data to visualize yet</h3>
-              <p className="text-gray-500 text-center max-w-md">
-                Start running tests to see analytics and trends over time.
-              </p>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
