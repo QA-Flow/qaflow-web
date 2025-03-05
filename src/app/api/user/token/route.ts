@@ -3,10 +3,6 @@ import prisma from "@/lib/prisma";
 import { generateApiToken } from "@/lib/utils";
 import { getUserIdFromSession } from "@/lib/auth-utils";
 
-export const config = {
-  runtime: "edge",
-};
-
 export async function GET(req: NextRequest) {
   try {
     const { error, userId } = await getUserIdFromSession(req);
