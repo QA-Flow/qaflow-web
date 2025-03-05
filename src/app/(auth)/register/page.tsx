@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { signUpAction } from "@/lib/actions";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
@@ -34,7 +34,7 @@ export default function RegisterPage() {
         }, 1500);
       }
     } catch (error) {
-      toast.error("An unexpected error occurred", {
+      toast.error("pected error occurred", {
         position: "top-right",
         duration: 3000,
       });
@@ -45,7 +45,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-4">
-      <Toaster />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
