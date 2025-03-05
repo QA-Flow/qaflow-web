@@ -47,8 +47,6 @@ After creating a test, you can add steps to it:
 await reporter.step("Step name", async () => {
   // Your step implementation goes here
   // For example: await page.click('.button');
-  
-  return true; // or any value
 });
 ```
 
@@ -70,7 +68,6 @@ The `step` method accepts the following parameters:
 ```javascript
 await reporter.step("Click login button", async () => {
   await page.click('.login-button');
-  return true;
 });
 ```
 
@@ -162,27 +159,22 @@ async function runTest() {
   // Add test steps
   await reporter.step("Navigate to login page", () => {
     console.log("Navigating to login page...");
-    return true;
   });
 
   await reporter.step("Enter username", () => {
     console.log("Entering username...");
-    return true;
   });
 
   await reporter.step("Enter password", () => {
     console.log("Entering password...");
-    return true;
   });
 
   await reporter.step("Click login button", () => {
     console.log("Clicking login button...");
-    return true;
   });
 
   await reporter.step("Verify redirect to dashboard", () => {
     console.log("Verifying redirect...");
-    return true;
   });
 
   // End the test and get results
@@ -228,4 +220,3 @@ try {
 
 Now that you understand the basics, check out:
 - [Examples](/docs/examples) for integration with specific frameworks
-- [API Reference](/docs/api-reference) for detailed API documentation 
