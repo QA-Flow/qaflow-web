@@ -1,3 +1,9 @@
 {
-    "buildCommand": "sh vercel.sh"
+    "buildCommand": "sh vercel.sh && cp -r public .next/server/public",
+    "routes": [
+        {
+            "src": "/public/(.*)",
+            "dest": ".next/server/public/public/$1"
+        }
+    ]
 }
