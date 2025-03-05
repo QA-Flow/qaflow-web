@@ -1,11 +1,9 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { FaFlask, FaBug, FaChartLine, FaRocket, FaRegLightbulb, FaRegClock } from "react-icons/fa";
-import './home-layout.css';
 
 function Home() {
   
@@ -19,12 +17,12 @@ function Home() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const MotionLink = motion(Link)
+  const MotionLink = motion.create(Link)
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 drawer">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 drawer">
+      <Navbar />
       <div className="drawer-content">
-        <Navbar />
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -145,9 +143,8 @@ function Home() {
             </motion.button>
           </motion.div>
         </div>
-        <Footer />
       </div>
-    </main>
+    </div>
   );
 }
 

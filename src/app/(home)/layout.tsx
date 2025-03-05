@@ -1,12 +1,16 @@
-import type { ReactNode } from 'react';
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
-import { baseOptions } from '@/app/layout.config';
-import { Toaster } from 'react-hot-toast';
-import './home-layout.css';
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import React from "react";
 
-export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
-  return <>
-    <Toaster position="top-right" />
-    {children}
-  </>;
-}
+export default function HomeLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  );
+} 
