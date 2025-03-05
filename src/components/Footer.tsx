@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "motion/react";
 import { FaTwitter, FaLinkedin, FaInstagram, FaGithub } from "react-icons/fa";
 import Link from "next/link";
@@ -9,8 +11,8 @@ export default function Footer() {
       title: "Quick Links",
       links: [
         { label: "Home", href: "/" },
-        { label: "Features", href: "/#features" },
-        { label: "Pricing", href: "/pricing" },
+        // { label: "Features", href: "/features" },
+        // { label: "Pricing", href: "/pricing" },
         { label: "Contact", href: "/contact" },
       ],
     },
@@ -18,9 +20,9 @@ export default function Footer() {
       title: "Resources",
       links: [
         { label: "Documentation", href: "/docs" },
-        { label: "Support", href: "/support" },
-        { label: "Blog", href: "/blog" },
-        { label: "FAQs", href: "/faq" },
+        // { label: "Support", href: "/support" },
+        // { label: "Blog", href: "/blog" },
+         { label: "FAQs", href: "/faq" },
       ],
     },
     {
@@ -36,9 +38,9 @@ export default function Footer() {
   
   const socialLinks = [
     { icon: <FaTwitter />, label: "Twitter", href: "https://twitter.com" },
-    { icon: <FaLinkedin />, label: "LinkedIn", href: "https://linkedin.com" },
+    { icon: <FaLinkedin />, label: "LinkedIn", href: "https://www.linkedin.com/company/qaflow-tech/" },
     { icon: <FaInstagram />, label: "Instagram", href: "https://instagram.com" },
-    { icon: <FaGithub />, label: "GitHub", href: "https://github.com" }
+    { icon: <FaGithub />, label: "GitHub", href: "https://github.com/qa-flow" }
   ];
 
   return (
@@ -50,7 +52,6 @@ export default function Footer() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">
               <span className="bg-gradient-to-r from-blue-600 to-cyan-500 text-transparent bg-clip-text">
