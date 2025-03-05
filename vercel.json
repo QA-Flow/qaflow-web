@@ -1,9 +1,6 @@
 {
     "buildCommand": "sh vercel.sh",
     "functions": {
-        "api/**/*.ts": {
-            "includeFiles": "templates/*.ejs"
-        },
         "src/lib/*.ts": {
             "includeFiles": "templates/*.ejs"
         }
