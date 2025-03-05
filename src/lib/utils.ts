@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import { nanoid } from "nanoid";
 
 export async function generateUniqueToken() {
@@ -62,20 +61,19 @@ export function toJSON<T>(
 
 export async function verifyApiToken(token: string) {
   const cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
-  
+  console.log("cleanToken", cleanToken);
   try {
-    const apiToken = await prisma.apiToken.findUnique({
+    const apiToken = await prisma.apiToken.findFirst({
       where: { token: cleanToken },
-      include: { user: true },
     });
 
     if (!apiToken) {
+      console.log("apiToken not found");
       return null;
     }
 
     return {
-      userId: apiToken.userId,
-      user: apiToken.user,
+      userId: apiToken.userId
     };
   } catch (error) {
     return null;
@@ -110,10 +108,12 @@ export async function updateApiToken(userId: string) {
   }
 }
 
-export default {
+const utils = {
   generateApiToken,
   getUserTokens,
   deleteApiToken,
   verifyApiToken,
   updateApiToken
 };
+
+export default utils;
