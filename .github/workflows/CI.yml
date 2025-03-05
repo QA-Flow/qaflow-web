@@ -29,5 +29,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Generate Prisma Client
+        run: pnpx prisma generate
+
+      - name: Sleep
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5s'
+
       - name: Build Next.js
-        run: pnpx prisma generate && pnpm run build
+        run: pnpm run build
