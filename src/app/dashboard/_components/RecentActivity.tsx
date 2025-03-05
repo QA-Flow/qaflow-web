@@ -19,11 +19,11 @@ export default function RecentActivity({ isLoading, totalTests, activities = [] 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
       case "passed":
-        return <FaCheckCircle className="text-success" />;
+        return <FaCheckCircle className="text-green-500" />;
       case "failed":
-        return <FaTimesCircle className="text-error" />;
+        return <FaTimesCircle className="text-red-500" />;
       default:
-        return <FaExclamationTriangle className="text-warning" />;
+        return <FaExclamationTriangle className="text-yellow-500" />;
     }
   };
 
@@ -32,10 +32,10 @@ export default function RecentActivity({ isLoading, totalTests, activities = [] 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.6 }}
-      className="card bg-white shadow-md hover:shadow-lg transition-all h-full"
+      className="rounded-lg bg-white shadow-md hover:shadow-lg transition-all h-full overflow-hidden"
     >
-      <div className="card-body">
-        <h2 className="card-title text-xl font-semibold text-gray-700 mb-4">Recent Activity</h2>
+      <div className="p-6">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Recent Activity</h2>
         
         {isLoading ? (
           <div className="space-y-4">
@@ -58,8 +58,8 @@ export default function RecentActivity({ isLoading, totalTests, activities = [] 
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center 
-                    ${activity.status.toLowerCase() === "passed" ? "bg-success/20" : 
-                      activity.status.toLowerCase() === "failed" ? "bg-error/20" : "bg-warning/20"}`
+                    ${activity.status.toLowerCase() === "passed" ? "bg-green-100" : 
+                      activity.status.toLowerCase() === "failed" ? "bg-red-100" : "bg-yellow-100"}`
                   }>
                     {getStatusIcon(activity.status)}
                   </div>
@@ -71,18 +71,18 @@ export default function RecentActivity({ isLoading, totalTests, activities = [] 
               </Link>
             ))}
             
-            <div className="card-actions justify-end pt-3">
+            <div className="flex justify-end pt-3">
               <Link href="/dashboard/reports">
-                <button className="btn btn-sm btn-ghost">View all activities</button>
+                <button className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors">View all activities</button>
               </Link>
             </div>
           </div>
         ) : totalTests > 0 ? (
           <div className="text-gray-600">
             <p>View your recent test reports in the Test Reports section.</p>
-            <div className="card-actions justify-end pt-3">
+            <div className="flex justify-end pt-3">
               <Link href="/dashboard/reports">
-                <button className="btn btn-sm btn-primary rounded-xl">Go to Test Reports</button>
+                <button className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors">Go to Test Reports</button>
               </Link>
             </div>
           </div>

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { IconType } from "react-icons";
 
 interface DashboardCardProps {
   title: string;
@@ -37,13 +36,13 @@ export default function DashboardCard({ title, value, icon, color, delay = 0 }: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       whileHover={{ y: -5, transition: { delay: 0 } }}
-      className="card bg-white shadow-md hover:shadow-lg transition-all"
+      className="rounded-lg bg-white shadow-md hover:shadow-lg transition-all overflow-hidden"
     >
-      <div className="card-body">
+      <div className="p-6">
         <div className={`${bgColors[color]} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}>
           <div className={`${textColors[color]} text-2xl`}>{icon}</div>
         </div>
-        <h2 className="card-title text-3xl font-bold">{value}</h2>
+        <h2 className="text-3xl font-bold mb-1">{value}</h2>
         <p className="text-gray-500">{title}</p>
       </div>
     </motion.div>

@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserIdFromSession } from "@/lib/auth-utils";
 
-export const config = {
-  runtime: "edge",
-};
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

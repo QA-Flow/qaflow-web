@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { FaKey, FaClipboardList, FaPlus, FaChartLine, FaInfoCircle } from "react-icons/fa";
+import { FaKey, FaClipboardList, FaInfoCircle } from "react-icons/fa";
 
 export default function QuickActions() {
   return (
@@ -10,11 +10,11 @@ export default function QuickActions() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.5 }}
-      className="card bg-white shadow-md hover:shadow-lg transition-all"
+      className="rounded-lg bg-white shadow-md hover:shadow-lg transition-all overflow-hidden"
     >
-      <div className="card-body">
-        <h2 className="card-title text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
-          <FaInfoCircle className="text-primary" />
+      <div className="p-6">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
+          <FaInfoCircle className="text-blue-600" />
           Quick Actions
         </h2>
         
@@ -23,7 +23,7 @@ export default function QuickActions() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="btn btn-outline btn-block justify-start gap-3 rounded-xl"
+              className="flex items-center justify-start w-full gap-3 py-3 px-4 rounded-xl border border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors"
             >
               <FaKey />
               Manage API Key
@@ -34,23 +34,13 @@ export default function QuickActions() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="btn btn-outline btn-block justify-start gap-3 rounded-xl"
+              className="flex items-center justify-start w-full gap-3 py-3 px-4 rounded-xl border border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-colors"
             >
               <FaClipboardList />
               View Test Reports
             </motion.div>
           </Link>
-          
-          <Link href="/dashboard/analytics">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="btn btn-outline btn-block justify-start gap-3 rounded-xl"
-            >
-              <FaChartLine />
-              Analytics
-            </motion.div>
-          </Link>
+
         </div>
       </div>
     </motion.div>

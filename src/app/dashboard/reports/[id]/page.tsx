@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { FaArrowLeft, FaCheckCircle, FaTimesCircle, FaExclamationTriangle, FaClock, FaUser, FaDesktop, FaChrome, FaWindows } from "react-icons/fa";
+import Image from "next/image";
 
 interface TestStep {
   name: string;
@@ -198,7 +199,7 @@ export default function TestReportDetailPage() {
         <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
           <div className="text-5xl text-gray-300 mb-4">🔍</div>
           <h2 className="text-2xl font-bold text-gray-700 mb-2">Report Not Found</h2>
-          <p className="text-gray-500 mb-6">The test report you're looking for doesn't exist or you don't have permission to view it.</p>
+          <p className="text-gray-500 mb-6">The test report you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
           <button 
             onClick={() => router.push("/dashboard/reports")}
             className="btn btn-primary rounded-xl"
@@ -212,7 +213,6 @@ export default function TestReportDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Toaster />
       <button 
         onClick={() => router.back()}
         className="btn btn-ghost gap-2 mb-8"
@@ -371,9 +371,11 @@ export default function TestReportDetailPage() {
                               View Screenshot
                             </summary>
                             <div className="mt-2 border border-gray-200 rounded-lg overflow-hidden">
-                              <img 
+                              <Image 
                                 src={step.screenshot}
                                 alt={`Screenshot for ${step.name || step.description}`}
+                                width={300}
+                                height={200}
                                 className="w-full"
                               />
                             </div>

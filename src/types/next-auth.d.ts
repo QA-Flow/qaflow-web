@@ -16,7 +16,6 @@ declare module 'next-auth' {
     email: string;
   }
 }
-
 declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     id: string;
@@ -24,3 +23,4 @@ declare module 'next-auth/jwt' {
     username: string;
   }
 }
+

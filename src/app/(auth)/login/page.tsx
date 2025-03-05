@@ -8,9 +8,11 @@ import { useState } from "react";
 import { signInAction } from "@/lib/actions";
 import { Toaster, toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 
 export default function LoginPage() {
+  const session = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -18,28 +20,20 @@ export default function LoginPage() {
 
   const handleSubmit = async (data: SignInValues) => {
     setIsSubmitting(true);
-    try {
-      const result = await signInAction(data);
-      
-      if (result?.error) {
-        toast.error(result.error, {
-          position: "top-right",
-          duration: 3000,
-        });
-      } else {
-        toast.success("Login successful!", {
-          position: "top-right",
-          duration: 3000,
-        });
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred", {
+    const result = await signInAction(data);
+    if (result.success) {
+      await session.update();
+      toast.success("Login successful!", {
         position: "top-right",
         duration: 3000,
       });
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      toast.error("Login failed. Please check your credentials.");
     }
+      
+    setTimeout(() => {
+      router.push(callbackUrl || DEFAULT_LOGIN_REDIRECT);
+    }, 1000);
   };
 
   return (
@@ -69,7 +63,7 @@ export default function LoginPage() {
           <LoginForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
 
           <div className="text-center mt-6">
-            <span className="text-gray-600">Don't have an account? </span>
+            <span className="text-gray-600">Don&apos;t have an account? </span>
             <Link
               href="/register"
               className="text-blue-600 hover:underline font-medium"

@@ -1,7 +1,7 @@
 import { docs } from '@/.source';
 import { loader } from 'fumadocs-core/source';
 import { iconMap } from './icons';
-import React, { createElement } from 'react';
+import { createElement } from 'react';
 
 export const source = loader({
   baseUrl: '/docs',

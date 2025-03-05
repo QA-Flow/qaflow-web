@@ -83,8 +83,6 @@ QAFlow Reporter supports the following configuration options:
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `apiKey` | string | required | Your QAFlow API key |
-| `pingInterval` | number | `null` | Interval in milliseconds for sending ping requests |
-| `autoScreenshot` | boolean | `false` | Whether to automatically capture screenshots |
 
 ## Verifying Installation
 
@@ -106,7 +104,6 @@ reporter.createTest(
 // Add a test step
 await reporter.step("Verify connection", async () => {
   // This step should pass
-  return true;
 });
 
 // End the test

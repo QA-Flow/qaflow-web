@@ -3,16 +3,19 @@ import prisma from "@/lib/prisma";
 import { verifyApiToken } from "@/lib/utils";
 import { getUserIdFromSession } from "@/lib/auth-utils";
 
-export const config = {
-  runtime: "edge",
-};
-
 export async function GET(req: NextRequest) {
   try {
     const { error, userId } = await getUserIdFromSession(req);
     
     if (error) {
       return error;
+    }
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 401 }
+      );
     }
 
     const reports = await prisma.testReport.findMany({
@@ -35,7 +38,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ reports });
   } catch (error) {
-    console.error("Error fetching test reports:", error);
     return NextResponse.json(
       { error: "An error occurred while fetching test reports" },
       { status: 500 }
@@ -55,6 +57,7 @@ export async function POST(req: NextRequest) {
     }
 
     const apiToken = authHeader.substring(7);
+    console.log("apiToken", apiToken);
 
     const tokenData = await verifyApiToken(apiToken);
     

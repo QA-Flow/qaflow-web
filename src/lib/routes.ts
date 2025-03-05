@@ -6,7 +6,8 @@ export const publicRoutes = [
   "/privacy",
   "/terms",
   "/blog",
-  "/faq"
+  "/faq",
+  "/api/tests"
 ];
 
 export const authRoutes = [
