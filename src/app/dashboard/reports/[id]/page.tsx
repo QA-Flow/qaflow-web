@@ -86,25 +86,25 @@ export default function TestReportDetailPage() {
     switch (status.toLowerCase()) {
       case "passed":
         return (
-          <span className="badge badge-success gap-1 py-3 px-4">
+          <span className="badge badge-success gap-1 py-3 px-4 text-white font-medium shadow-sm shadow-green-200">
             <FaCheckCircle /> Passed
           </span>
         );
       case "failed":
         return (
-          <span className="badge badge-error gap-1 py-3 px-4">
+          <span className="badge badge-error gap-1 py-3 px-4 text-white font-medium shadow-sm shadow-red-200">
             <FaTimesCircle /> Failed
           </span>
         );
       case "skipped":
         return (
-          <span className="badge badge-warning gap-1 py-3 px-4">
+          <span className="badge badge-warning gap-1 py-3 px-4 text-gray-800 font-medium shadow-sm shadow-yellow-200">
             <FaExclamationTriangle /> Skipped
           </span>
         );
       default:
         return (
-          <span className="badge badge-info gap-1 py-3 px-4">
+          <span className="badge badge-info gap-1 py-3 px-4 text-white font-medium">
             <FaExclamationTriangle /> {status}
           </span>
         );
@@ -130,13 +130,13 @@ export default function TestReportDetailPage() {
   const getStepStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
       case "passed":
-        return <FaCheckCircle className="text-success text-lg" />;
+        return <FaCheckCircle className="text-green-600 text-xl" />;
       case "failed":
-        return <FaTimesCircle className="text-error text-lg" />;
+        return <FaTimesCircle className="text-red-600 text-xl" />;
       case "skipped":
-        return <FaExclamationTriangle className="text-warning text-lg" />;
+        return <FaExclamationTriangle className="text-amber-500 text-xl" />;
       default:
-        return <FaExclamationTriangle className="text-info text-lg" />;
+        return <FaExclamationTriangle className="text-blue-500 text-xl" />;
     }
   };
 
@@ -311,21 +311,33 @@ export default function TestReportDetailPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`p-6 mb-4 rounded-2xl ${
+                  className={`p-6 mb-4 rounded-2xl border-l-4 ${
                     step.status.toLowerCase() === "passed" 
-                      ? "bg-success/10" 
+                      ? "bg-green-50 border-green-500" 
                       : step.status.toLowerCase() === "failed"
-                      ? "bg-error/10"
-                      : "bg-warning/10"
+                      ? "bg-red-50 border-red-500"
+                      : "bg-amber-50 border-amber-500"
                   }`}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="mt-1">
+                    <div className={`mt-1 p-2 rounded-full ${
+                      step.status.toLowerCase() === "passed"
+                        ? "bg-green-100"
+                        : step.status.toLowerCase() === "failed"
+                        ? "bg-red-100"
+                        : "bg-amber-100"
+                    }`}>
                       {getStepStatusIcon(step.status)}
                     </div>
                     <div className="flex-1">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
-                        <h3 className="font-semibold text-gray-800">{step.name || step.description}</h3>
+                        <h3 className={`font-semibold ${
+                          step.status.toLowerCase() === "passed"
+                            ? "text-green-800"
+                            : step.status.toLowerCase() === "failed"
+                            ? "text-red-800"
+                            : "text-amber-800"
+                        }`}>{step.name || step.description}</h3>
                         <div className="flex items-center gap-3">
                           {step.duration && (
                             <span className="text-sm text-gray-500">
