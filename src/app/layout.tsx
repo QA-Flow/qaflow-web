@@ -1,10 +1,9 @@
 import './globals.css'
-import { RootProvider } from 'fumadocs-ui/provider';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import type { ReactNode } from 'react';
 import NextAuthSessionProvider from "@/components/providers/SessionProvider";
 import { auth } from "@/auth";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,8 +24,9 @@ export default async function RootLayout({
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="min-h-screen">
+        <Toaster position="top-right" />
         <NextAuthSessionProvider session={session}>
-          <RootProvider>{children}</RootProvider>
+          {children}
         </NextAuthSessionProvider>
       </body>
     </html>
