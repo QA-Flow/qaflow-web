@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
+    output   = "./prisma-client" //the value to adjust or add if you dont have it
 }
 
 datasource db {
