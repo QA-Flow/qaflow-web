@@ -37,7 +37,7 @@ export const signUpAction = async (signUpValues: SignUpValues) => {
 
     await generateApiToken(user.id);
 
-    await sendWelcomeEmailWithTemplate(user.username, user.email);
+    // await sendWelcomeEmailWithTemplate(user.username, user.email);
 
     return { success: true };
   } catch (error) {
