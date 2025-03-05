@@ -23,7 +23,7 @@ export const sendTemplatedEmail = async (mailData: {
   context: Record<string, any>;
 }) => {
   try {
-    const templatePath = path.resolve('./templates/emails/', `${mailData.template}.ejs`);
+    const templatePath = path.resolve("./public/templates/emails", `${mailData.template}.ejs`);
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     
     const html = ejs.render(templateSource, mailData.context);
