@@ -18,11 +18,10 @@ export default auth(async (req) => {
   const isDashboardRoute = nextUrl.pathname.startsWith("/dashboard");
   const isApiRoute = nextUrl.pathname.startsWith("/api") && !isApiAuthRoute;
 
-  if (isApiAuthRoute) return;
+  if (isApiAuthRoute || isApiRoute) return;
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      console.log("redirecting to dashboard");
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
     return;
