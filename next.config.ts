@@ -5,10 +5,9 @@ const withMDX = createMDX();
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
-  },
+  }
 };
 
 export default withMDX(nextConfig);
